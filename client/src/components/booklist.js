@@ -22,8 +22,7 @@ function Booklist() {
 
   return (
     <div>
-      <ul id="book-list" />
-      {display}
+      <ul id="book-list">{display}</ul>
       <Bookdetalis passedbookid={selected} />
     </div>
   );
