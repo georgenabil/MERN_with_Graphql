@@ -61,9 +61,7 @@ function Addbook() {
           {Authors}
         </select>
       </div>
-
       <button>+</button>
-      <p>{authorid}</p>
     </form>
   );
 }

@@ -34,3 +34,14 @@ form {
   position: fixed;
   bottom: 0;
 }
+
+form .field {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0px 10px;
+}
+
+form label {
+  text-align: right;
+  padding: 6px;
+}
