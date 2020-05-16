@@ -11,7 +11,6 @@ const User = new Schema({
 
 User.pre("save", function (next) {
   if (this.password && this.password.length >= 6) {
-    console.log("reatched herer");
     this.password = this.hashPassword(this.password);
   }
   next();
@@ -25,8 +24,8 @@ User.methods.IsAuthenticate = function (password) {
   return this.password === this.hashPassword(password);
 };
 
-User.methods.SignToken = () => {
-  let token = JWT.sign({ email: this.email, userid: this.id }, "TOPSCERET", {
+User.methods.SignToken = (email, userid) => {
+  let token = JWT.sign({ email, userid }, "TOPSCERET", {
     expiresIn: "1h",
   });
   return token;

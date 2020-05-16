@@ -9,7 +9,7 @@ const typeDefs = `
     authr(id:ID!):Authr
     aurths:[Authr]!
     book(id:ID!):book
-    user(id:ID!):user
+    user:user
     login(email:String! password:String!): Authdata!
     SignIn(email:String! password:String! username:String!):Authdata!
      
@@ -32,7 +32,7 @@ const typeDefs = `
    type user {
      email: String!
      password: String!
-     name :String!
+     username :String!
    }
 
    type Authdata {
@@ -56,26 +56,38 @@ const resolvers = {
     book: (root, args, context, info) => {
       return BOOk.findById(args.id);
     },
-    user: (root, args, context, info) => {
-      return { username: "george", password: "dasdasdasdadsds" };
+    user: async (root, args, context, info) => {
+      if (context.isAuth) {
+        let found = await User.findById(context.userId);
+        return found;
+      } else {
+        return { err: "not auhtenticated" }; // should  handle error batter
+      }
     },
     login: async (root, args, context, info) => {
       if (args.password && args.email) {
         let founduser = await User.findOne({ email: args.email });
         if (founduser.IsAuthenticate(args.password)) {
-          return { userid: founduser.id, token: founduser.SignToken() };
+          let token = founduser.SignToken(founduser.email, founduser.id);
+          return {
+            userid: founduser.id,
+            token,
+          };
         } else {
-          throw new Error("check auth data");
+          return { userid: "", token: "", err: "no found user" };
         }
       } else {
-        throw new Error("wrog userInput");
+        return { userid: "", token: "", err: "no giving corret data" };
       }
     },
     SignIn: async (root, args, context, info) => {
       if (args.password && args.email && args.username) {
         newuser = new User({ ...args });
         let saveduser = await newuser.save();
-        return { token: saveduser.SignToken(), userid: saveduser.id };
+        return {
+          token: saveduser.SignToken(saveduser.email, saveduser.id),
+          userid: saveduser.id,
+        };
       }
     },
   },

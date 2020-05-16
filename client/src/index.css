@@ -31,6 +31,9 @@ form {
   background: #fff;
   padding: 20px;
   width: 400px;
+}
+
+form.bookform {
   position: fixed;
   bottom: 0;
 }

@@ -9,6 +9,7 @@ const User = require("./models/user.js");
 
 const Authmiddlewar = function (req, res, next) {
   const authHeader = req.get("Authorization");
+
   if (!authHeader) {
     req.isAuth = false;
     return next();
@@ -25,6 +26,7 @@ const Authmiddlewar = function (req, res, next) {
     req.isAuth = false;
     return next();
   }
+
   req.userId = decodedToken.userid;
   req.isAuth = true;
   next();
@@ -52,7 +54,7 @@ app.use(
 
 app.use((error, req, res, next) => {
   console.log(error);
-  const status = error.statusCode || 500;
+  const status = error.statusCode || 400;
   const message = error.message;
   const data = error.data;
   res.status(status).json({ message: message, data: data });

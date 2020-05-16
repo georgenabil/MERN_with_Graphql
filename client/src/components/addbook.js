@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import {
   getAUthorsQuery,
   addBookMutation,
-  getBooksQuery
+  getBooksQuery,
 } from "../queries/queries";
 import { useQuery, useMutation } from "@apollo/react-hooks";
 
@@ -18,7 +18,7 @@ function Addbook() {
   if (loading) {
     Authors = <option>the page is loading</option>;
   } else {
-    Authors = data.aurths.map(aurth => {
+    Authors = data.aurths.map((aurth) => {
       return (
         <option key={aurth.id} value={aurth.id}>
           {aurth.name}
@@ -29,29 +29,34 @@ function Addbook() {
 
   return (
     <form
+      className="bookform"
       id="add-book"
-      onSubmit={e => {
+      onSubmit={(e) => {
         e.preventDefault();
         addBook({
           variables: { name: name, genre: genre, authorid: authorid },
-          refetchQueries: [{ query: getBooksQuery }]
+          refetchQueries: [{ query: getBooksQuery }],
         });
       }}
     >
       <div className="field">
         <label>Book name:</label>
-        <input type="text" onChange={e => setName(e.target.value)} required />
+        <input type="text" onChange={(e) => setName(e.target.value)} required />
       </div>
 
       <div className="field">
         <label>Genre:</label>
-        <input type="text" onChange={e => setGenre(e.target.value)} required />
+        <input
+          type="text"
+          onChange={(e) => setGenre(e.target.value)}
+          required
+        />
       </div>
 
       <div className="field">
         <label>Book name:</label>
         <select
-          onChange={e => setAuthorid(e.target.value)}
+          onChange={(e) => setAuthorid(e.target.value)}
           required
           defaultValue={"DEFAULT"}
         >

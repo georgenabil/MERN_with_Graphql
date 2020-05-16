@@ -27,6 +27,33 @@ const addBookMutation = gql`
   }
 `;
 
+const signup = gql`
+  query($email: String!, $password: String!, $username: String!) {
+    SignIn(email: $email, password: $password, username: $username) {
+      token
+      userid
+    }
+  }
+`;
+
+const login = gql`
+  query($email: String!, $password: String!) {
+    login(email: $email, password: $password) {
+      token
+      userid
+    }
+  }
+`;
+
+const getuser = gql`
+  {
+    user {
+      username
+      email
+    }
+  }
+`;
+
 const getBookQuery = gql`
   query($id: ID!) {
     book(id: $id) {
@@ -46,4 +73,12 @@ const getBookQuery = gql`
   }
 `;
 
-export { getAUthorsQuery, getBooksQuery, addBookMutation, getBookQuery };
+export {
+  getAUthorsQuery,
+  getBooksQuery,
+  addBookMutation,
+  getBookQuery,
+  login,
+  signup,
+  getuser,
+};

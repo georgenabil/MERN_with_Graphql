@@ -11,9 +11,9 @@ function Booklist() {
   if (loading) {
     display = <li>the page is loading</li>;
   } else {
-    display = data.books.map(book => {
+    display = data.books.map((book) => {
       return (
-        <li key={book.id} onClick={e => Setselected(book.id)}>
+        <li key={book.id} onClick={(e) => Setselected(book.id)}>
           {book.name}
         </li>
       );
@@ -22,6 +22,7 @@ function Booklist() {
 
   return (
     <div>
+      <h1> George Main booklist </h1>
       <ul id="book-list">{display}</ul>
       <Bookdetalis passedbookid={selected} />
     </div>

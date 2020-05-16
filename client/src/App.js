@@ -3,20 +3,41 @@ import React from "react";
 import Booklist from "./components/booklist";
 import Addbook from "./components/addbook";
 
-import ApolloClient from "apollo-boost";
+import ApolloClient, { from } from "apollo-boost";
 import { ApolloProvider } from "@apollo/react-hooks";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import Login from "./components/login";
+import { getJwt } from "./helpers/helper";
+import Authentication from "./components/Authentication";
 
 const client = new ApolloClient({
-  uri: "http://localhost:5000/graphql"
+  uri: "http://localhost:5000/graphql",
+  headers: { Authorization: getJwt() },
 });
 
 function App() {
   return (
     <ApolloProvider client={client}>
       <div id="main" className="App">
-        <h1> George Main booklist </h1>
-        <Booklist />
-        <Addbook />
+        <Router>
+          <Switch>
+            <Route exact path="/">
+              <Login />
+            </Route>
+
+            <Route path="/books">
+              <Booklist />
+              <Addbook />
+            </Route>
+
+            <Route path="/auth">
+              <Authentication>
+                <Booklist />
+                <Addbook />
+              </Authentication>
+            </Route>
+          </Switch>
+        </Router>
       </div>
     </ApolloProvider>
   );
