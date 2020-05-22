@@ -22,6 +22,7 @@ const Authmiddlewar = function (req, res, next) {
     req.isAuth = false;
     return next();
   }
+
   if (!decodedToken) {
     req.isAuth = false;
     return next();
@@ -34,9 +35,14 @@ const Authmiddlewar = function (req, res, next) {
 
 app.use(cors());
 
-mongoose.connect(
-  "mongodb+srv://admin:admin@cluster0-nfrvc.mongodb.net/test?retryWrites=true&w=majority"
-);
+mongoose
+  .connect(
+    "mongodb+srv://admin:admin@cluster0-nfrvc.mongodb.net/test?retryWrites=true&w=majority",
+    { useNewUrlParser: true }
+  )
+  .catch((err) => {
+    console.log("monogoDB Error :::::: ", err);
+  });
 
 mongoose.connection.once("open", () => {
   console.log("connected DB");
@@ -54,7 +60,7 @@ app.use(
 
 app.use((error, req, res, next) => {
   console.log(error);
-  const status = error.statusCode || 400;
+  const status = error.statusCode || 200;
   const message = error.message;
   const data = error.data;
   res.status(status).json({ message: message, data: data });

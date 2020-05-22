@@ -12,17 +12,24 @@ export default function Login() {
 
   return (
     <div>
+      <div className="logo">
+        <span style={{ fontSize: "100px" }}>&#127535;</span>
+      </div>
       <form
+        id="Login"
         onSubmit={(e) => {
           e.preventDefault();
           LoginExcute({ variables: { email, password } });
           if (data && data.login.token.length > 6) {
             localStorage.setItem("JWT", data.login.token);
-            history.push("/books");
+            history.push("/auth");
+          }
+          if (error) {
+            console.log(error);
           }
         }}
       >
-        <div className="field">
+        <div className="forminput">
           <label>email:</label>
           <input
             type="email"
@@ -31,7 +38,7 @@ export default function Login() {
           />
         </div>
 
-        <div className="field">
+        <div className="forminput">
           <label>password:</label>
           <input
             type="password"
@@ -39,7 +46,9 @@ export default function Login() {
             required
           />
         </div>
-        <button>+</button>
+        <div className="formsumbit">
+          <button type="submit">Login</button>
+        </div>
       </form>
     </div>
   );

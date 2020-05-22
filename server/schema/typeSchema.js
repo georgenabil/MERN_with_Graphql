@@ -10,7 +10,7 @@ const typeDefs = `
     aurths:[Authr]!
     book(id:ID!):book
     user:user
-    login(email:String! password:String!): Authdata!
+    login(email:String! password:String!): Authdata
     SignIn(email:String! password:String! username:String!):Authdata!
      
   }
@@ -61,23 +61,32 @@ const resolvers = {
         let found = await User.findById(context.userId);
         return found;
       } else {
-        return { err: "not auhtenticated" }; // should  handle error batter
+        throw new Error("not authentication");
       }
     },
     login: async (root, args, context, info) => {
       if (args.password && args.email) {
-        let founduser = await User.findOne({ email: args.email });
-        if (founduser.IsAuthenticate(args.password)) {
-          let token = founduser.SignToken(founduser.email, founduser.id);
-          return {
-            userid: founduser.id,
-            token,
-          };
+        let founduser;
+        try {
+          founduser = await User.findOne({ email: args.email });
+        } catch (error) {
+          console.log(error);
+        }
+        if (founduser) {
+          if (founduser.IsAuthenticate(args.password)) {
+            let token = founduser.SignToken(founduser.email, founduser.id);
+            return {
+              userid: founduser.id,
+              token,
+            };
+          } else {
+            throw new Error("Wrong Password");
+          }
         } else {
-          return { userid: "", token: "", err: "no found user" };
+          throw new Error("no user found");
         }
       } else {
-        return { userid: "", token: "", err: "no giving corret data" };
+        throw new Error("no correct arguments");
       }
     },
     SignIn: async (root, args, context, info) => {
