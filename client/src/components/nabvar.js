@@ -1,37 +1,37 @@
 import React from "react";
 import { currentuser } from "../helpers/helper";
-import { useHistory, Redirect } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
-export default function Navbar() {
-  const style = {
-    fontSize: "35px",
-    margin: "160px",
-  };
-
+export default function Navbar(props) {
   const history = useHistory();
+  const user = props.getuser;
 
   return (
     <div className="navbar">
       <div className="navlogo">
-        <span style={style}>&#127535;</span>
+        <span>&#127535;</span>
       </div>
       <div className="sginup">
         <button
           onClick={() => {
-            if (currentuser()) {
+            if (user) {
+              //logout logic
               sessionStorage.clear();
               localStorage.clear();
+              props.setuser(null);
+              history.push("/");
             } else {
-              console.log("pushedddddddddddddddddddddddd");
-              history.replace("/");
+              sessionStorage.clear();
+              localStorage.clear();
+              history.push("/");
             }
           }}
         >
-          {currentuser() ? "Log out" : "Log in"}
+          {user ? "Log out" : "Log in"}
         </button>
       </div>
       <div className="userdata">
-        <span className={currentuser() ? "" : "hidden"}>{currentuser()}</span>
+        <span className={user ? "" : "hidden"}>{user}</span>
       </div>
     </div>
   );

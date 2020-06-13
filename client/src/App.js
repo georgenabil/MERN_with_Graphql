@@ -1,8 +1,7 @@
-import React from "react";
+import React, { useState, useCallback } from "react";
 import Booklist from "./components/booklist";
 import Addbook from "./components/addbook";
-import { onError } from "apollo-link-error";
-import ApolloClient, { from } from "apollo-boost";
+import ApolloClient from "apollo-boost";
 import { ApolloProvider } from "@apollo/react-hooks";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Login from "./components/login";
@@ -16,13 +15,20 @@ const client = new ApolloClient({
 });
 
 function App() {
+  const [user, Setuser] = useState(null);
+
+  const setuser = (data) => {
+    Setuser(data);
+  };
+  console.log(user);
+
   return (
     <ApolloProvider client={client}>
       <Router>
-        <Navbar />
+        <Navbar getuser={user} setuser={setuser} />
         <Switch>
           <Route exact path="/">
-            <Login />
+            <Login setuser={setuser} />
           </Route>
 
           <Route path="/books">

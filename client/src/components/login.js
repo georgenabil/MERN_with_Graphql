@@ -1,12 +1,22 @@
-import React, { useState, Component } from "react";
-import { login, signup } from "../queries/queries";
-import { useQuery, useLazyQuery } from "@apollo/react-hooks";
+import React, { useRef } from "react";
+import { login } from "../queries/queries";
+import { useLazyQuery } from "@apollo/react-hooks";
 import { useHistory, Redirect } from "react-router-dom";
 
-export default function Login() {
-  const [email, Setemail] = useState(null);
-  const [password, Setpassword] = useState(null);
-  const [LoginExcute, { loading, error, data }] = useLazyQuery(login);
+export default function Login(props) {
+  const [LoginExcute, { loading, data }] = useLazyQuery(login, {
+    onCompleted: (responses) => {
+      console.log("the response is  ", responses);
+      if (responses && responses.login.token.length > 6) {
+        console.log("waitinnnng");
+        localStorage.setItem("JWT", responses.login.token);
+        props.setuser(responses.login.username);
+        history.push("/books");
+      }
+    },
+  });
+  const emailRef = useRef(null);
+  const passwordRef = useRef(null);
 
   const history = useHistory();
 
@@ -19,32 +29,28 @@ export default function Login() {
         id="Login"
         onSubmit={(e) => {
           e.preventDefault();
-          LoginExcute({ variables: { email, password } });
-          if (data && data.login.token.length > 6) {
+          LoginExcute({
+            variables: {
+              email: emailRef.current.value.trim(),
+              password: passwordRef.current.value.trim(),
+            },
+          });
+          /*  if (data && data.login.token.length > 6) {
+            console.log("waitinnnng");
             localStorage.setItem("JWT", data.login.token);
-            history.push("/auth");
-          }
-          if (error) {
-            console.log(error);
-          }
+            props.setuser(data.login.user);
+            history.push("/books");
+          }*/
         }}
       >
         <div className="forminput">
           <label>email:</label>
-          <input
-            type="email"
-            onChange={(e) => Setemail(e.target.value)}
-            required
-          />
+          <input type="email" ref={emailRef} required />
         </div>
 
         <div className="forminput">
           <label>password:</label>
-          <input
-            type="password"
-            onChange={(e) => Setpassword(e.target.value)}
-            required
-          />
+          <input ref={passwordRef} type="password" required />
         </div>
         <div className="formsumbit">
           <button type="submit">Login</button>

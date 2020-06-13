@@ -41,6 +41,7 @@ const login = gql`
     login(email: $email, password: $password) {
       token
       userid
+      username
     }
   }
 `;

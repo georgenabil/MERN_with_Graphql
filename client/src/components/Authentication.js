@@ -11,6 +11,7 @@ export default function Authentication(props) {
   if (localStorage.getItem("JWT") == null) {
     sessionStorage.clear();
     display = Redirect("/");
+    console.log("redterned by retrun");
     return <div>{display}</div>;
   }
 
@@ -19,7 +20,6 @@ export default function Authentication(props) {
   } else {
     if (data) {
       sessionStorage.setItem("currentuser", data.user.username);
-      console.log(data);
       display = props.children;
     } else {
       if (error) {
